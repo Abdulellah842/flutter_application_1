@@ -1,0 +1,17 @@
+{
+  "name": "focus-guardian-assistant-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LLM backend for the Personal Assistant screen",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "@dataconnect/generated": "file:src/dataconnect-generated",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  }
+}

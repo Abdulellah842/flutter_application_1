@@ -1,0 +1,105 @@
+mutation CreateDemoData @transaction @auth(level: PUBLIC, insecureReason: "This is a seed data operation and is safe to expose to the public.") {
+  user_insertMany(data: [
+    {
+      id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      username: "chatty_user",
+      publicKey: "pubkey123",
+      createdAt: "2023-10-27T10:00:00Z",
+      displayPicture: "https://example.com/chatty.png",
+      statusMessage: "Always up for a good chat!"
+    },
+    {
+      id: "b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22",
+      username: "silent_observer",
+      publicKey: "pubkey456",
+      createdAt: "2023-10-27T10:05:00Z",
+      displayPicture: "https://example.com/silent.png",
+      statusMessage: "Observing the digital world."
+    },
+    {
+      id: "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33",
+      username: "friendly_dev",
+      publicKey: "pubkey789",
+      createdAt: "2023-10-27T10:10:00Z",
+      displayPicture: "https://example.com/dev.png",
+      statusMessage: "Coding and connecting!"
+    }
+  ])
+  chat_insertMany(data: [
+    {
+      id: "d3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44",
+      type: "group",
+      createdAt: "2023-10-27T10:15:00Z",
+      name: "Firebase Dev Chat",
+      description: "A chat for Firebase developers."
+    },
+    {
+      id: "e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a55",
+      type: "private",
+      createdAt: "2023-10-27T10:20:00Z",
+      name: "Private Convo",
+      description: "A private conversation between two users."
+    }
+  ])
+  chatParticipant_insertMany(data: [
+    {
+      chatId: "d3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44",
+      userId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      joinedAt: "2023-10-27T10:16:00Z",
+      role: "admin"
+    },
+    {
+      chatId: "d3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44",
+      userId: "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33",
+      joinedAt: "2023-10-27T10:17:00Z",
+      role: "member"
+    },
+    {
+      chatId: "e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a55",
+      userId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      joinedAt: "2023-10-27T10:21:00Z",
+      role: "member"
+    },
+    {
+      chatId: "e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a55",
+      userId: "b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22",
+      joinedAt: "2023-10-27T10:22:00Z",
+      role: "member"
+    }
+  ])
+  chatMessage_insertMany(data: [
+    {
+      chatId: "d3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44",
+      senderId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      encryptedContent: "Hello everyone!",
+      messageType: "text",
+      createdAt: "2023-10-27T10:18:00Z"
+    },
+    {
+      chatId: "d3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44",
+      senderId: "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33",
+      encryptedContent: "Hey chatty_user, good to be here!",
+      messageType: "text",
+      createdAt: "2023-10-27T10:19:00Z"
+    },
+    {
+      chatId: "e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a55",
+      senderId: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      encryptedContent: "Psst, private message!",
+      messageType: "text",
+      createdAt: "2023-10-27T10:23:00Z"
+    }
+  ])
+  contact_insertMany(data: [
+    {
+      user1Id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      user2Id: "b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22",
+      createdAt: "2023-10-27T10:25:00Z"
+    },
+    {
+      user1Id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      user2Id: "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33",
+      createdAt: "2023-10-27T10:26:00Z"
+    }
+  ])
+}

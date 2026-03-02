@@ -1,0 +1,39 @@
+query ListAllChats @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  chats {
+    id
+    name
+    type
+    createdAt
+    description
+  }
+}
+
+query GetMyProfile @auth(level: USER) {
+  user(key: {id_expr: "auth.uid"}) {
+    id
+    username
+    publicKey
+    displayPicture
+    statusMessage
+    createdAt
+  }
+}
+
+mutation CreateChatMessage($chatId: UUID!, $encryptedContent: String!, $messageType: String!) @auth(level: USER) {
+  chatMessage_insert(data: {
+    chatId: $chatId,
+    senderId_expr: "auth.uid",
+    encryptedContent: $encryptedContent,
+    messageType: $messageType,
+    createdAt_expr: "request.time"
+  })
+}
+
+mutation AddUserToChat($chatId: UUID!, $userId: UUID!, $role: String) @auth(level: USER) {
+  chatParticipant_insert(data: {
+    chatId: $chatId,
+    userId: $userId,
+    joinedAt_expr: "request.time",
+    role: $role
+  })
+}
