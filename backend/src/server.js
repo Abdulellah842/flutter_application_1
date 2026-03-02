@@ -90,10 +90,18 @@ async function askOpenAI({ apiKey, model, prompt, context, history, locale }) {
         },
       ],
     },
-    ...trimmedHistory.map((m) => ({
-      role: m?.role === 'assistant' ? 'assistant' : 'user',
-      content: [{ type: 'input_text', text: typeof m?.content === 'string' ? m.content : '' }],
-    })),
+    ...trimmedHistory.map((m) => {
+      const isAssistant = m?.role === 'assistant';
+      return {
+        role: isAssistant ? 'assistant' : 'user',
+        content: [
+          {
+            type: isAssistant ? 'output_text' : 'input_text',
+            text: typeof m?.content === 'string' ? m.content : '',
+          },
+        ],
+      };
+    }),
     {
       role: 'user',
       content: [{ type: 'input_text', text: prompt }],
