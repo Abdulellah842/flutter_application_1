@@ -47,7 +47,7 @@ class LlmApiService {
           continue;
         }
 
-        final decoded = jsonDecode(res.body);
+        final decoded = jsonDecode(utf8.decode(res.bodyBytes));
         if (decoded is Map<String, dynamic>) {
           final direct = decoded['reply']?.toString().trim();
           if (direct != null && direct.isNotEmpty) return direct;
