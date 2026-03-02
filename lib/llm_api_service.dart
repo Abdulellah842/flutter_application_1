@@ -37,34 +37,37 @@ class LlmApiService {
       'locale': 'ar-SA',
     };
 
-    try {
-      final res = await http
-          .post(uri, headers: headers, body: jsonEncode(payload))
-          .timeout(const Duration(seconds: 20));
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        final res = await http
+            .post(uri, headers: headers, body: jsonEncode(payload))
+            .timeout(Duration(seconds: attempt == 0 ? 35 : 45));
 
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        return null;
-      }
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          continue;
+        }
 
-      final decoded = jsonDecode(res.body);
-      if (decoded is Map<String, dynamic>) {
-        final direct = decoded['reply']?.toString().trim();
-        if (direct != null && direct.isNotEmpty) return direct;
+        final decoded = jsonDecode(res.body);
+        if (decoded is Map<String, dynamic>) {
+          final direct = decoded['reply']?.toString().trim();
+          if (direct != null && direct.isNotEmpty) return direct;
 
-        final choices = decoded['choices'];
-        if (choices is List && choices.isNotEmpty) {
-          final first = choices.first;
-          if (first is Map<String, dynamic>) {
-            final content = (first['message'] as Map<String, dynamic>?)?['content']
-                ?.toString()
-                .trim();
-            if (content != null && content.isNotEmpty) return content;
+          final choices = decoded['choices'];
+          if (choices is List && choices.isNotEmpty) {
+            final first = choices.first;
+            if (first is Map<String, dynamic>) {
+              final content = (first['message'] as Map<String, dynamic>?)?['content']
+                  ?.toString()
+                  .trim();
+              if (content != null && content.isNotEmpty) return content;
+            }
           }
         }
+      } catch (_) {
+        // Retry once to absorb cold starts and transient network failures.
       }
-      return null;
-    } catch (_) {
-      return null;
     }
+
+    return null;
   }
 }
