@@ -79,24 +79,24 @@ async function askOpenAI({ apiKey, model, prompt, context, history, locale }) {
   const input = [
     {
       role: 'system',
-      content: [{ type: 'text', text: systemPrompt }],
+      content: [{ type: 'input_text', text: systemPrompt }],
     },
     {
       role: 'system',
       content: [
         {
-          type: 'text',
+          type: 'input_text',
           text: `USER_CONTEXT_JSON:\n${JSON.stringify(context, null, 2)}`,
         },
       ],
     },
     ...trimmedHistory.map((m) => ({
       role: m?.role === 'assistant' ? 'assistant' : 'user',
-      content: [{ type: 'text', text: typeof m?.content === 'string' ? m.content : '' }],
+      content: [{ type: 'input_text', text: typeof m?.content === 'string' ? m.content : '' }],
     })),
     {
       role: 'user',
-      content: [{ type: 'text', text: prompt }],
+      content: [{ type: 'input_text', text: prompt }],
     },
   ];
 
@@ -151,3 +151,4 @@ app.use((req, res) => {
 app.listen(port, () => {
   console.log(`Assistant backend listening on http://localhost:${port}`);
 });
+
