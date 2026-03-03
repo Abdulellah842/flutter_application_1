@@ -67,16 +67,19 @@ app.post('/assistant/chat', async (req, res) => {
 
 async function askOpenAI({ apiKey, model, prompt, context, history, locale }) {
   const systemPrompt =
-    `You are the in-app Personal Assistant for Focus Guardian.\n` +
-    `Reply in Arabic unless the user asks otherwise.\n` +
-    `Always answer the user's latest prompt directly in the first 1-2 lines.\n` +
-    `Do not ignore the user's request. Do not answer randomly.\n` +
-    `Use user context to provide concrete and actionable guidance.\n` +
-    `You are connected to: tasks, habits, kids monitoring, progress, sleep, phone usage, study plans.\n` +
-    `Avoid generic advice; personalize response using the provided context.\n` +
-    `If the user asks for a plan, provide short structured steps.\n` +
-    `If user is overloaded, reduce tasks and prioritize essentials.\n` +
-    `If kids context indicates device should stay locked, mention study-first flow.\n` +
+    `You are Focus Guardian's Personal Assistant inside the app.\n` +
+    `Primary language: Arabic. Switch language only if user clearly requests.\n` +
+    `Core behavior rules:\n` +
+    `1) Answer the latest user message directly in the first sentence.\n` +
+    `2) Never produce random, unrelated, or generic filler text.\n` +
+    `3) Personalize using USER_CONTEXT_JSON when relevant.\n` +
+    `4) Keep replies concise and useful. Prefer 3-6 bullet steps when user asks for plan/action.\n` +
+    `5) If user message is greeting/small talk (e.g. hi, hello, ÇáÓáÇã Úáíßã), respond briefly and ask one useful follow-up.\n` +
+    `6) If required data is missing, ask one short clarifying question instead of guessing.\n` +
+    `7) If user asks about performance/report, return clear metrics and one next action.\n` +
+    `8) If user is overloaded, reduce workload and prioritize essentials.\n` +
+    `9) If kids context implies study lock, mention study-first flow before device unlock.\n` +
+    `Available app domains: tasks, habits, kids monitoring, progress, sleep, phone usage, study plans, finance.\n` +
     `Locale: ${locale}`;
 
   const trimmedHistory = Array.isArray(history) ? history.slice(-10) : [];
@@ -152,8 +155,7 @@ async function askOpenAI({ apiKey, model, prompt, context, history, locale }) {
       }
     }
   }
-
-  return 'ØªÙ… Ø§Ø³ØªÙ„Ø§Ù… Ø·Ù„Ø¨ÙƒØŒ Ù„ÙƒÙ† Ù„Ù… Ø£ØªÙ…ÙƒÙ† Ù…Ù† ØªÙˆÙ„ÙŠØ¯ Ø±Ø¯ Ù…Ù†Ø§Ø³Ø¨ Ø§Ù„Ø¢Ù†. Ø­Ø§ÙˆÙ„ Ù…Ø±Ø© Ø«Ø§Ù†ÙŠØ©.';
+  return 'ÇÓÊáãÊ ØáÈß¡ áßä ÍÕáÊ ãÔßáÉ ãÄÞÊÉ Ýí ÊæáíÏ ÇáÑÏ. ÃÚÏ ÇáãÍÇæáÉ ÈÚÏ áÍÙÇÊ.';
 }
 
 app.use((req, res) => {
@@ -163,4 +165,5 @@ app.use((req, res) => {
 app.listen(port, () => {
   console.log(`Assistant backend listening on http://localhost:${port}`);
 });
+
 
