@@ -75,6 +75,7 @@ async function askOpenAI({ apiKey, model, prompt, context, history, locale }) {
     `3) Personalize using USER_CONTEXT_JSON when relevant.\n` +
     `4) Keep replies concise and useful. Prefer 3-6 bullet steps when user asks for plan/action.\n` +
     `5) If user message is greeting/small talk (e.g. hi, hello, ÇáÓáÇã Úáíßã), respond briefly and ask one useful follow-up.\n` +
+    `5.1) If user message is a closing/thanks phrase (e.g. ÔßÑÇ, ÓáÇãÊß, íÚØíß ÇáÚÇÝíÉ, thanks), reply briefly and end gracefully without asking a follow-up question.\n` +
     `6) If required data is missing, ask one short clarifying question instead of guessing.\n` +
     `7) If user asks about performance/report, return clear metrics and one next action.\n` +
     `8) If user is overloaded, reduce workload and prioritize essentials.\n` +
@@ -165,5 +166,6 @@ app.use((req, res) => {
 app.listen(port, () => {
   console.log(`Assistant backend listening on http://localhost:${port}`);
 });
+
 
 
