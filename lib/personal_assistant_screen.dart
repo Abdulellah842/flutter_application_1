@@ -291,6 +291,11 @@ class _PersonalAssistantScreenState extends State<PersonalAssistantScreen> {
   Future<String> _buildReply(String prompt) async {
     final lower = prompt.toLowerCase();
 
+    if (_isDeviceTimeQuestion(lower)) {
+      _lastReplySource = 'local';
+      return _deviceTimeReply();
+    }
+
     if (lower.contains('مكالمة') || lower.contains('اتصل')) {
       await _callUser();
       _lastReplySource = 'local';
@@ -352,6 +357,32 @@ class _PersonalAssistantScreenState extends State<PersonalAssistantScreen> {
 
     _lastReplySource = 'local';
     return _contextAwareGeneralReply();
+  }
+
+  bool _isDeviceTimeQuestion(String lower) {
+    return lower.contains('كم الساعة') ||
+        lower.contains('الساعة كم') ||
+        lower.contains('الوقت') ||
+        lower.contains('التاريخ') ||
+        lower.contains('اليوم') ||
+        lower.contains('what time') ||
+        lower.contains('date today') ||
+        lower.contains('what day');
+  }
+
+  String _deviceTimeReply() {
+    final now = DateTime.now();
+    final date =
+        '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final time =
+        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    final weekday = _weekdayAr(now.weekday);
+    final offset = _formatOffset(now.timeZoneOffset);
+    return 'حسب جهازك الآن:\n'
+        '- اليوم: $weekday\n'
+        '- التاريخ: $date\n'
+        '- الوقت: $time\n'
+        '- المنطقة الزمنية: ${now.timeZoneName} ($offset)';
   }
 
   String _contextAwareGeneralReply() {
