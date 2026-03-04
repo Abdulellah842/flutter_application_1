@@ -1,6 +1,7 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'widgets/home_style_card.dart';
 
 class KidsMonitoringScreen extends StatefulWidget {
   const KidsMonitoringScreen({super.key});
@@ -956,13 +957,10 @@ class _KidsMonitoringScreenState extends State<KidsMonitoringScreen> {
   }
 
   Widget _card({required Widget child}) {
-    return Container(
+    return HomeStyleCard(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-      ),
+      accentA: const Color(0xFF3B82F6),
+      accentB: const Color(0xFF1E293B),
       child: child,
     );
   }
@@ -1236,4 +1234,6 @@ class _ChildProfile {
   String simplificationPlan = '';
   final List<String> badges;
 }
+
+
 

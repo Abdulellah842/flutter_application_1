@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'widgets/home_style_card.dart';
 
 class HabitsScreen extends StatefulWidget {
   const HabitsScreen({super.key});
@@ -462,75 +463,100 @@ class _HabitsScreenState extends State<HabitsScreen> {
               subtitle: 'لون الحالة: أخضر ممتاز | أصفر متوسط | أحمر ضعيف',
               c1: const Color(0xFF0EA5E9),
               c2: const Color(0xFF2563EB),
-              child: Column(
-                children: List.generate(_habits.length, (index) {
-                  final item = _habits[index];
-                  final statusColor = _statusColor(item.progress);
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: statusColor.withValues(alpha: 0.9)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item.name,
-                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isWide = constraints.maxWidth >= 700;
+                  final gap = 10.0;
+                  final cardWidth = isWide
+                      ? (constraints.maxWidth - gap) / 2
+                      : constraints.maxWidth;
+
+                  return Wrap(
+                    spacing: gap,
+                    runSpacing: gap,
+                    children: List.generate(_habits.length, (index) {
+                      final item = _habits[index];
+                      final statusColor = _statusColor(item.progress);
+
+                      return SizedBox(
+                        width: cardWidth,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.24),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: statusColor.withValues(alpha: 0.95)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 12,
+                                offset: const Offset(0, 6),
                               ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: statusColor.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(20),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      item.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: statusColor.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      _statusLabel(item.progress),
+                                      style: TextStyle(color: statusColor, fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              child: Text(
-                                _statusLabel(item.progress),
-                                style: TextStyle(color: statusColor, fontWeight: FontWeight.w700),
+                              const SizedBox(height: 8),
+                              LinearProgressIndicator(
+                                value: item.progress,
+                                minHeight: 8,
+                                borderRadius: BorderRadius.circular(8),
+                                backgroundColor: Colors.white.withValues(alpha: 0.15),
+                                valueColor: AlwaysStoppedAnimation<Color>(statusColor),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Text(
+                                    'الإنجاز: ${(item.progress * 100).round()}%',
+                                    style: const TextStyle(color: Colors.white70),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    'Streak: ${item.streak} أيام',
+                                    style: const TextStyle(color: Colors.white70),
+                                  ),
+                                ],
+                              ),
+                              Slider(
+                                value: item.progress,
+                                min: 0,
+                                max: 1,
+                                activeColor: statusColor,
+                                onChanged: (v) => _updateHabitProgress(index, v),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 6),
-                        LinearProgressIndicator(
-                          value: item.progress,
-                          minHeight: 8,
-                          borderRadius: BorderRadius.circular(8),
-                          backgroundColor: Colors.white.withValues(alpha: 0.15),
-                          valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            Text(
-                              'الإنجاز: ${(item.progress * 100).round()}%',
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                            const Spacer(),
-                            Text(
-                              'Streak: ${item.streak} أيام',
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                          ],
-                        ),
-                        Slider(
-                          value: item.progress,
-                          min: 0,
-                          max: 1,
-                          activeColor: statusColor,
-                          onChanged: (v) => _updateHabitProgress(index, v),
-                        ),
-                      ],
-                    ),
+                      );
+                    }),
                   );
-                }),
+                },
               ),
             ),
             const SizedBox(height: 12),
@@ -929,16 +955,10 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return HomeStyleCard(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          colors: [c1, c2],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
-      ),
+      accentA: c1,
+      accentB: c2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

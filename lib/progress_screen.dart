@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'widgets/home_style_card.dart';
+
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
 
@@ -479,14 +481,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
       );
 
   Widget _card({required Widget child, List<Color>? gradient, EdgeInsetsGeometry padding = const EdgeInsets.all(12)}) {
-    return Container(
+    return HomeStyleCard(
       padding: padding,
-      decoration: BoxDecoration(
-        color: gradient == null ? const Color(0xFF0E263A) : null,
-        gradient: gradient == null ? null : LinearGradient(colors: gradient, begin: Alignment.topRight, end: Alignment.bottomLeft),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white24),
-      ),
+      accentA: gradient?.first ?? const Color(0xFF0EA5E9),
+      accentB: gradient?.last ?? const Color(0xFF1E293B),
       child: child,
     );
   }

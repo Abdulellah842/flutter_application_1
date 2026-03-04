@@ -3,6 +3,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'widgets/home_style_card.dart';
 
 class BooksScreen extends StatefulWidget {
   const BooksScreen({super.key});
@@ -884,16 +885,10 @@ class _FeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return HomeStyleCard(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          colors: [c1, c2],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
-      ),
+      accentA: c1,
+      accentB: c2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

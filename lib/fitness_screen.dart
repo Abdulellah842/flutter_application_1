@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notification_service.dart';
+import 'widgets/home_style_card.dart';
 
 class FitnessScreen extends StatefulWidget {
   const FitnessScreen({super.key});
@@ -420,16 +421,10 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return HomeStyleCard(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          colors: [color1, color2],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
-      ),
+      accentA: color1,
+      accentB: color2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -649,5 +644,7 @@ const List<_ChallengeItem> _initialChallenges = [
     done: false,
   ),
 ];
+
+
 
 

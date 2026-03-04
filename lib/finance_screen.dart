@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'widgets/home_style_card.dart';
+
 class FinanceScreen extends StatefulWidget {
   const FinanceScreen({super.key});
 
@@ -865,14 +867,9 @@ class _FinanceScreenState extends State<FinanceScreen> {
   }
 
   Widget _card({required Widget child}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
+    return HomeStyleCard(
+      accentA: const Color(0xFF22C55E),
+      accentB: const Color(0xFF0F172A),
       child: child,
     );
   }

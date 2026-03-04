@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'widgets/home_style_card.dart';
+
 import 'notification_service.dart';
 
 class DailyTasksScreen extends StatefulWidget {
@@ -999,16 +1001,10 @@ class _DailyTasksScreenState extends State<DailyTasksScreen> {
   }
 
   Widget _card({required Widget child}) {
-    return Container(
+    return HomeStyleCard(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
-      ),
+      accentA: const Color(0xFF0EA5E9),
+      accentB: const Color(0xFF1E293B),
       child: child,
     );
   }

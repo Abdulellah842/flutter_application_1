@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'llm_api_service.dart';
 import 'notification_service.dart';
+import 'widgets/home_style_card.dart';
 
 class PersonalAssistantScreen extends StatefulWidget {
   const PersonalAssistantScreen({super.key});
@@ -524,14 +525,9 @@ class _PersonalAssistantScreenState extends State<PersonalAssistantScreen> {
   }
 
   Widget _card({required Widget child}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.07),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-      ),
+    return HomeStyleCard(
+      accentA: const Color(0xFF2563EB),
+      accentB: const Color(0xFF0F172A),
       child: child,
     );
   }
