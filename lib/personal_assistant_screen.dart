@@ -222,7 +222,20 @@ class _PersonalAssistantScreenState extends State<PersonalAssistantScreen> {
   }
 
   Map<String, dynamic> _lifeContext() {
+    final now = DateTime.now();
+    final date =
+        '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final time =
+        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    final offset = _formatOffset(now.timeZoneOffset);
+
     return <String, dynamic>{
+      'current_local_iso': now.toIso8601String(),
+      'current_date_local': date,
+      'current_time_local': time,
+      'current_weekday_local_ar': _weekdayAr(now.weekday),
+      'current_timezone_name': now.timeZoneName,
+      'current_timezone_offset': offset,
       'commitment_percent': _commitment,
       'tasks_completion_percent': _tasksCompletion,
       'habits_completion_percent': _habitsCompletion,
@@ -240,6 +253,26 @@ class _PersonalAssistantScreenState extends State<PersonalAssistantScreen> {
       'memory_notes': _memoryNotes.take(8).toList(),
       'predictions': _predictions.take(5).toList(),
     };
+  }
+
+  String _weekdayAr(int weekday) {
+    return switch (weekday) {
+      DateTime.monday => 'الاثنين',
+      DateTime.tuesday => 'الثلاثاء',
+      DateTime.wednesday => 'الأربعاء',
+      DateTime.thursday => 'الخميس',
+      DateTime.friday => 'الجمعة',
+      DateTime.saturday => 'السبت',
+      _ => 'الأحد',
+    };
+  }
+
+  String _formatOffset(Duration offset) {
+    final sign = offset.isNegative ? '-' : '+';
+    final abs = offset.abs();
+    final hh = abs.inHours.toString().padLeft(2, '0');
+    final mm = (abs.inMinutes % 60).toString().padLeft(2, '0');
+    return '$sign$hh:$mm';
   }
 
   List<Map<String, String>> _historyForApi() {
