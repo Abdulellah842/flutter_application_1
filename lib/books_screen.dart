@@ -88,6 +88,19 @@ class _BooksScreenState extends State<BooksScreen> {
   ];
 
   late final List<int?> _answers = List<int?>.filled(5, null);
+  final ScrollController _scrollController = ScrollController();
+
+  static const List<_SectionNavItem> _navItems = <_SectionNavItem>[
+    _SectionNavItem('ملخصات فورية', Icons.auto_awesome),
+    _SectionNavItem('خطة التعلّم', Icons.route_outlined),
+    _SectionNavItem('تتبع القراءة', Icons.track_changes),
+    _SectionNavItem('الفهم العميق', Icons.lightbulb_outline),
+    _SectionNavItem('اختبارات قصيرة', Icons.fact_check_outlined),
+    _SectionNavItem('تعلم 5 دقائق', Icons.flash_on_outlined),
+    _SectionNavItem('مجتمع القراء', Icons.groups_2_outlined),
+    _SectionNavItem('الملاحظات', Icons.sticky_note_2_outlined),
+    _SectionNavItem('وسائط متعددة', Icons.layers_outlined),
+  ];
 
   static const List<_MicroCard> _microCards = [
     _MicroCard(type: 'معلومة', text: 'القراءة 20 دقيقة يوميًا تعني ~12 كتابًا سنويًا.'),
@@ -161,6 +174,7 @@ class _BooksScreenState extends State<BooksScreen> {
     _deepExplainController.dispose();
     _notesController.dispose();
     _hoursController.dispose();
+    _scrollController.dispose();
     _tts.stop();
     super.dispose();
   }
@@ -342,6 +356,70 @@ class _BooksScreenState extends State<BooksScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _scrollToSection(int index) async {
+    if (!_scrollController.hasClients) return;
+    final target = (index + 1) * 680.0;
+    final max = _scrollController.position.maxScrollExtent;
+    final safeTarget = target > max ? max : target;
+    await _scrollController.animateTo(
+      safeTarget,
+      duration: const Duration(milliseconds: 340),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  Widget _sectionNavGrid() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final crossAxisCount = constraints.maxWidth > 760 ? 3 : 2;
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _navItems.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.1,
+          ),
+          itemBuilder: (context, index) {
+            final item = _navItems[index];
+            return InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () => _scrollToSection(index),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(item.icon, color: Colors.white, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        item.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -360,6 +438,7 @@ class _BooksScreenState extends State<BooksScreen> {
           centerTitle: true,
         ),
         body: ListView(
+          controller: _scrollController,
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
           children: [
             Text(
@@ -375,6 +454,14 @@ class _BooksScreenState extends State<BooksScreen> {
               style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
             ),
             const SizedBox(height: 14),
+            _FeatureCard(
+              title: 'خيارات قسم الكتب',
+              subtitle: 'اختر أي كرت للانتقال السريع مباشرة.',
+              c1: const Color(0xFF1E293B),
+              c2: const Color(0xFF0F172A),
+              child: _sectionNavGrid(),
+            ),
+            const SizedBox(height: 12),
             _FeatureCard(
               title: 'ملخصات فورية بالذكاء الاصطناعي',
               subtitle: 'تصوير صفحة أو رفع PDF ثم توليد ملخص فوري + ملخص صوتي.',
@@ -1091,6 +1178,12 @@ class _Pill extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SectionNavItem {
+  const _SectionNavItem(this.title, this.icon);
+  final String title;
+  final IconData icon;
 }
 
 enum _LearningGoal {
